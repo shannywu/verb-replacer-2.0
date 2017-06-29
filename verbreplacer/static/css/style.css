@@ -1,0 +1,39 @@
+.title {
+    font-size: 36px !important;
+}
+
+.head-section {
+    margin: 50px;
+}
+
+.table-container {
+    width: 800px !important;
+}
+
+.wrong-verb {
+    color: red;
+}
+
+.right-align {
+	text-align: right;
+}
+
+.no-replace {
+    height: 50px;
+}
+
+.loading-bar {
+    height: 200px;
+}
+
+.hide {
+    display: none;
+}
+
+.ui.table td {
+    font-size: 17px;
+}
+
+.rank {
+    text-align: right;
+}

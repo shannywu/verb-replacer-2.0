@@ -1,0 +1,7 @@
+.DS_Store
+stanford-parser-full-2015-04-20
+srilm-1.7.2
+env
+*.pyc
+*.db
+__pycache__

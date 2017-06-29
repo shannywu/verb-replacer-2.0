@@ -1,0 +1,73 @@
+<!-- {% load staticfiles %} -->
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <!-- coding : utf-8 -->
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+  <!-- cache : off -->
+  <meta http-equiv="cache-control" content="no-cache">
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="expires" content="0">
+
+  <!-- Lastest IE version -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <!-- RWD -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Page title -->
+  <title>Verb Replacer</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.css" />
+  <link rel="stylesheet" href="/static/css/style.css" />
+
+  <!-- jQuery -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.js"></script>
+
+  <link rel="shortcut icon" href="static/img/favicon.png" />
+  <script src="/static/js/main.js"></script>
+
+</head>
+
+<body>
+  <div></div>
+  <div class="ui container head-section">
+    <h1 class="ui header purple center aligned title">Verb Replacer</h1>
+    <h4 class="ui header center aligned">Give us a sentence and we will help you check the verb!</h4>
+    <div class="ui centered stackable grid">
+      <div class="ten wide column item">
+        <div class="ui action fluid icon input">
+          <input class="prompt" type="text" id="search-bar" name="inquery">
+          <button class="ui purple icon button" id="search-btn">
+            <i class="search icon"></i>
+          </button>
+        </div>
+        <div></div>
+      </div>
+      
+    </div>
+  </div>
+
+
+  <div class="ui container table-container">
+    <table class="ui large purple unstackable table">
+      <thead>
+        <tr>
+          <th class="two wide">Wrong Verb</th>
+          <th class="one wide">Rank</th>
+          <th class="two wide">Recommended Verb</th>
+          <th class="two wide">Raw Count</th>
+          <th class="two wide">Smoothed Count</th>
+        </tr>
+      </thead>
+      <tbody id="search-result" class="hide">
+      </tbody>
+    </table>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,72 @@
+<!-- {% load staticfiles %} -->
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <!-- coding : utf-8 -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <!-- cache : off -->
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="expires" content="0">
+
+    <!-- Lastest IE version -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- RWD -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Page title -->
+    <title>Verb Replacer</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.css" />
+
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.js"></script>
+
+    <link rel="shortcut icon" href="static/img/favicon.png" />
+    <script src="/static/js/main.js"></script>
+
+</head>
+
+<body>
+    <div></div>
+    <div class="ui container stacked segment">
+        <h1 class="ui purple header center aligned">Verb Replacer</h1>
+        <h4 class="ui header center aligned">Write an article and we will help you check the verb!</h4>
+        <div class="ui centered stackable grid">
+            <div class="ten wide column item">
+                <div class="ui form" >
+                    <div class="field" >
+                        <textarea id="field-area"></textarea>
+                    </div>
+                </div>
+                <button class="ui purple button container center aligned" id="submit-btn">
+                    Submit
+                </button>
+                <div></div>
+            </div>
+            
+        </div>
+    </div>
+
+
+    <div class="ui container">
+        <table class="ui very compact large purple selectable unstackable table" id="search-result">
+<!--             <thead>
+                <tr>
+                    <th class="one wide">Rank</th>
+                    <th class="ten wide">Recommend Verb</th>
+                </tr>
+            </thead>
+            <tbody id="search-result">
+            </tbody> -->
+        </table>
+    </div>
+    </div>
+</body>
+
+</html>
