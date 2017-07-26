@@ -37,3 +37,9 @@ def search_channel(word):
         cmd = 'SELECT correct, orig, avg FROM EF_CHANNEL WHERE wrong="%s"' % (word)
         return list(cur.execute(cmd))
 
+
+def search_vobj(word):
+    with get_connection() as conn:
+        cur = conn.cursor()
+        cmd = 'SELECT correct, cnt FROM EF_VOBJ_TABLE WHERE wrong="%s"' % (word)
+        return list(cur.execute(cmd))

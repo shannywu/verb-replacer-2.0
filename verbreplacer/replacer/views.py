@@ -14,8 +14,9 @@ def index(request):
     return render(request, 'index.html')
 
 @csrf_exempt
-def sent_input(request):
-    sent = request.POST.get('search')
+def sent_input(request, sent):
+    if not sent:
+        sent = request.POST.get('search')
     if sent:
         print('sent_input')
         result = main.rv_main(sent)

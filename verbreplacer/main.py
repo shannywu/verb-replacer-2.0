@@ -9,6 +9,8 @@ from srilm_wrapper import NgramScorer
 wordnet_lemmatizer = WordNetLemmatizer()
 
 wiki_channel_count = defaultdict(lambda: defaultdict(tuple))
+ef_vobj_channel_count = defaultdict(lambda: defaultdict(float))
+
 be_verbs = {'be', 'is', 'am', 'are', 'was', 'were', '\'s', '\'d', 'been', 'should', 'could', 'would', 'shall', 'can', 'will'}
 
 
@@ -31,6 +33,11 @@ def lemmatize_obj(obj):
 def get_channel(verb):
     channel_list = sorted(db_finder_old.search_channel(verb), key=lambda x: x[2], reverse=True)
     return channel_list
+
+
+def get_vobj(verb, obj):
+    vobj_list = sorted(db_finder_old.search_vobj(verb + '_' + obj), key=lambda x: x[1], reverse=True)
+    return vobj_list
 
 
 def get_coll(obj, wrong):
@@ -84,8 +91,15 @@ def rv_main(line):
     verb_obj_subj = parse_sent(sent)
     tokens = tokenize(sent)
     ranks = []
+    results = {}
     for verb, obj, subj in verb_obj_subj:
         print('>>>>', verb, obj, subj)
+
+        vobj_list = get_vobj(verb, obj)
+        print(vobj_list)
+        if vobj_list:
+            results = {'wrong_verb': verb, 'object': obj, 'vobj_list': vobj_list}
+        
         verb_ind = tokens.index(verb)
         print(verb_ind)
         obj_ind = -1
@@ -116,22 +130,28 @@ def rv_main(line):
         print(wrong_verb_rank)
         if wrong_verb_rank > 5 or not wrong_verb_rank:
             reranked_list = rerank(lm_score, candidate_list)
+            reranked_list = list(filter(lambda x: x[0] != verb, reranked_list))
+            print(reranked_list)
             sug_list = []
             for i, (c_verb, score) in enumerate(reranked_list[:3]):
+                print(c_verb)
                 ch_rank = get_verb_rank(channel_list, c_verb)
                 if ch_rank:
                     orig = channel_list[ch_rank-1][1]
-                    avg = channel_list[ch_rank-1][2]
+                    avg = round(channel_list[ch_rank-1][2], 2)
                 else:
                     orig = 'not in channel'
                     avg = 'not in channel'
-                sug_list.append((i+1, c_verb, orig, round(avg, 2)))
-            results = {'wrong_verb': verb, 'object': obj, 'sug_list': sug_list}
+                sug_list.append((i+1, c_verb, orig, avg))
+            if results:
+                results['sug_list'] = sug_list
+            else:
+                results = {'wrong_verb': verb, 'object': obj, 'sug_list': sug_list, 'vobj_list': []}
             print(results)
             return results
         else:
-            return {}
+            return results
 
 
 # load_wiki_reg_cnt()
-# rv_main('I would like to eat dinner with you.')
+rv_main('I would like to eat dinner with you.')

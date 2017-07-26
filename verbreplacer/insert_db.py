@@ -1,11 +1,10 @@
 import fileinput
 import sqlite3
 
-TABLE_SCHEMA = ('CREATE TABLE EF_CHANNEL('
+TABLE_SCHEMA = ('CREATE TABLE EF_VOBJ_TABLE('
                     "wrong TEXT, "
                     "correct TEXT, "
-                    "orig INT, "
-                    "avg FLOAT "
+                    "cnt INT "
                     ');')
 
 
@@ -15,23 +14,23 @@ def get_connection():
     return conn
 
 def parse_word_cnts():
-    for line in fileinput.input('resources/ef.result.model.txt'):
-        wrong, correct, reg, orig, avg = line.strip().split('\t')
-        yield (wrong, correct, orig, avg)
+    for line in fileinput.input('ef.vobj.channel.txt'):
+        wrong, correct, cnt = line.strip().split('\t')
+        yield (wrong.lower(), correct.lower(), cnt)
 
 def init_db(word_cnts):
     with get_connection() as conn:
         cur = conn.cursor()
-        cur.execute("DROP TABLE IF EXISTS EF_CHANNEL;")
+        cur.execute("DROP TABLE IF EXISTS EF_VOBJ_TABLE;")
         # create table
         cur.execute(TABLE_SCHEMA)
         # insert data
-        cur.executemany('INSERT INTO EF_CHANNEL VALUES (?,?,?,?)', word_cnts)
+        cur.executemany('INSERT INTO EF_VOBJ_TABLE VALUES (?,?,?)', word_cnts)
 
 def search_cnts(word):
     with get_connection() as conn:
         cur = conn.cursor()
-        cmd = 'SELECT * FROM EF_CHANNEL WHERE wrong="%s";' % (word)
+        cmd = 'SELECT * FROM EF_VOBJ_TABLE WHERE wrong="%s";' % (word)
         for res in cur.execute(cmd):
             return res
         
@@ -42,4 +41,4 @@ if __name__ == '__main__':
     # insert data into sqlite3 db
     init_db(word_cnts)
     # search example. (Notice: result will be None if not exist)
-    print search_cnts('say');
+    print search_cnts('paly_game');

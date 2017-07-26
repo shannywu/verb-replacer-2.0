@@ -36,13 +36,13 @@
 <body>
   <div></div>
   <div class="ui container head-section">
-    <h1 class="ui header purple center aligned title">Verb Replacer</h1>
+    <h1 class="ui header violet center aligned title">Verb Replacer</h1>
     <h4 class="ui header center aligned">Give us a sentence and we will help you check the verb!</h4>
     <div class="ui centered stackable grid">
       <div class="ten wide column item">
         <div class="ui action fluid icon input">
           <input class="prompt" type="text" id="search-bar" name="inquery">
-          <button class="ui purple icon button" id="search-btn">
+          <button class="ui violet icon button" id="search-btn">
             <i class="search icon"></i>
           </button>
         </div>
@@ -54,14 +54,15 @@
 
 
   <div class="ui container table-container">
-    <table class="ui large purple unstackable table">
+    <table class="ui large violet unstackable table">
       <thead>
         <tr>
           <th class="two wide">Wrong Verb</th>
           <th class="one wide">Rank</th>
           <th class="two wide">Recommended Verb</th>
-          <th class="two wide">Raw Count</th>
-          <th class="two wide">Smoothed Count</th>
+          <th class="two wide">Verb-Obj Recommended Verb</th>
+          <!-- <th class="two wide">Raw Count</th> -->
+          <!-- <th class="two wide">Smoothed Count</th> -->
         </tr>
       </thead>
       <tbody id="search-result" class="hide">
