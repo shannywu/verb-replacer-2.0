@@ -29,26 +29,29 @@ $(document).ready(function() {
 function renderSearchResult(data) {
     var htmlFrag = '';
     console.log(data)
-    if (data['sug_list']) {
+    if (data['recommend_list']) {
+        console.log('yes');
         htmlFrag += '<tr>' +
-                    '<td rowspan="4">' + 
+                    '<td rowspan="3">' + 
                       '<span class="wrong-verb">' + data['wrong_verb'] + 
                       '</span><br><br>'+ data['object'] + 
                     '</td>'
         // data['sug_list'].forEach(function(element) {
-        for(i = 0; i < data['sug_list'].length; i++) {
-          console.log(data['sug_list'][i])
+        for(i = 0; i < data['recommend_list'].length; i++) {
+          console.log(data['recommend_list'][i])
           console.log(i)
-          element = data['sug_list'][i]
-          htmlFrag += '<td>' + element[0] + '</td>' +
-                      '<td>' + element[1] + '</td>' ;
-          if(i < data['vobj_list'].length) {
-            htmlFrag += '<td>' + data['vobj_list'][i][0] + '</td>' +
-            '</tr>' ;
-          }
-          else {
-            htmlFrag += '<td>N/A</td>' + '</tr>' ;
-          }
+          element = data['recommend_list'][i]
+          htmlFrag += '<td>' + (i+1) + '</td>' +
+                      '<td>' + element[0] + '</td>' +
+                      // '<td>' + element[1] + '</td>' +
+                      '</tr>';
+          // if(i < data['vobj_list'].length) {
+          //   htmlFrag += '<td>' + data['vobj_list'][i][0] + '</td>' +
+          //   '</tr>' ;
+          // }
+          // else {
+          //   htmlFrag += '<td>N/A</td>' + '</tr>' ;
+          // }
                       
         }
     } else {

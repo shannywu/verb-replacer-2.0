@@ -85,6 +85,32 @@ def get_verb_rank(_list, verb):
             return i+1
 
 
+def correct_misuse(reranked_list, vobj_results, channel_list):
+    sug_list = []
+    for i, (c_verb, score) in enumerate(reranked_list[:3]):
+        ch_rank = get_verb_rank(channel_list, c_verb)
+        if ch_rank:
+            # orig = channel_list[ch_rank-1][1]
+            avg = round(channel_list[ch_rank-1][2], 2)
+        else:
+            # orig = 'not in channel'
+            avg = 'not in channel'
+        sug_list.append((c_verb, avg))
+    
+    if vobj_results: # some words in vobj_list
+        vobj_list = vobj_results['recommend_list']
+        vobj_verb = list(map(lambda x: x[0], vobj_list))
+        if len(vobj_list) < 3:
+            for c_verb, avg in sug_list:
+                if c_verb not in vobj_verb:
+                    vobj_list.append((c_verb, avg))
+            recommend_list = vobj_list
+    else:
+        recommend_list = sug_list
+    
+    return recommend_list[:3]
+
+
 def rv_main(line):
     print(line)
     sent = line.strip()
@@ -96,62 +122,46 @@ def rv_main(line):
         print('>>>>', verb, obj, subj)
 
         vobj_list = get_vobj(verb, obj)
-        print(vobj_list)
+        # print(vobj_list)
         if vobj_list:
-            results = {'wrong_verb': verb, 'object': obj, 'vobj_list': vobj_list}
+            vobj_results = {'wrong_verb': verb, 'object': obj, 'recommend_list': vobj_list[:3]}
         
-        verb_ind = tokens.index(verb)
-        print(verb_ind)
-        obj_ind = -1
-        subj_ind = -1
-        verb = lemmatize_verb(verb.lower())
-        channel_list = get_channel(verb)
+        if len(vobj_list) < 3:
+            verb_ind = tokens.index(verb)
+            # print(verb_ind)
+            obj_ind = -1
+            subj_ind = -1
+            channel_list = get_channel(lemmatize_verb(verb.lower()))
 
-        if obj:
-            print(obj, tokens)
-            obj_ind = tokens.index(obj)
-            obj = lemmatize_obj(obj)
-            coll_list = get_coll(obj, verb.lower())
-        else:
-            coll_list = []
-
-        if subj:
-            subj_ind = tokens.index(subj)
-
-        print('channel_list: ', channel_list)
-        print('coll_list: ', len(coll_list))
-        candidate_list = build_candidate_list(channel_list, coll_list, verb)
-
-        verb_in_cand = list(map(lambda x: x[0], candidate_list))
-        
-        lm_score = language_model.get_lm_score(candidate_list, tokens, verb, verb_in_cand, verb_ind, obj_ind, subj_ind)
-        print('>>lm_score: ', len(lm_score), lm_score[:5])
-        wrong_verb_rank = get_verb_rank(lm_score, verb)
-        print(wrong_verb_rank)
-        if wrong_verb_rank > 5 or not wrong_verb_rank:
-            reranked_list = rerank(lm_score, candidate_list)
-            reranked_list = list(filter(lambda x: x[0] != verb, reranked_list))
-            print(reranked_list)
-            sug_list = []
-            for i, (c_verb, score) in enumerate(reranked_list[:3]):
-                print(c_verb)
-                ch_rank = get_verb_rank(channel_list, c_verb)
-                if ch_rank:
-                    orig = channel_list[ch_rank-1][1]
-                    avg = round(channel_list[ch_rank-1][2], 2)
-                else:
-                    orig = 'not in channel'
-                    avg = 'not in channel'
-                sug_list.append((i+1, c_verb, orig, avg))
-            if results:
-                results['sug_list'] = sug_list
+            if obj:
+                obj_ind = tokens.index(obj)
+                coll_list = get_coll(lemmatize_obj(obj), verb.lower())
             else:
-                results = {'wrong_verb': verb, 'object': obj, 'sug_list': sug_list, 'vobj_list': []}
-            print(results)
+                coll_list = []
+
+            if subj:
+                subj_ind = tokens.index(subj)
+
+            # print('channel_list: ', channel_list)
+            # print('coll_list: ', len(coll_list))
+            candidate_list = build_candidate_list(channel_list, coll_list, verb)
+
+            verb_in_cand = list(map(lambda x: x[0], candidate_list))
+            
+            lm_score = language_model.get_lm_score(candidate_list, tokens, verb, verb_in_cand, verb_ind, obj_ind, subj_ind)
+            # print('>>lm_score: ', len(lm_score), lm_score[:5])
+            wrong_verb_rank = get_verb_rank(lm_score, verb)
+            # print(wrong_verb_rank)
+
+            if wrong_verb_rank > 5 or not wrong_verb_rank:
+                reranked_list = rerank(lm_score, candidate_list)
+                reranked_list = list(filter(lambda x: x[0] != verb, reranked_list))
+            #     # print(reranked_list)
+                recommend_list = correct_misuse(reranked_list, vobj_results, channel_list)
+                results = {'wrong_verb': verb, 'object': obj, 'recommend_list': recommend_list}
             return results
         else:
-            return results
-
+            return vobj_results
 
 # load_wiki_reg_cnt()
-rv_main('I would like to eat dinner with you.')
+# rv_main('I would like to eat dinner with you.')
